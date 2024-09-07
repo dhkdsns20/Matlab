@@ -1,123 +1,137 @@
-% 변수대입
-a = 1;
+% MATLAB basic part2
 
-% 행렬
-b = [1 2 3];      % 1*3
-b = [1; 2; 3];    % 3*1
-c = b'            % 전치행렬
-d=1;              % 명령 창에는 뜨지않음
-                  % ;(세미콜론)의 두가지 역할
+mod(13,4);   % 나누기
+
+real(3+2i);  % 실수부
+imag(3+2i);  % 허수부
 
 
-d =[1 2 3;4 5 6];
-d(1,3);           % d의 1행3열
-
-
-2*3;
-b.^2;             % .^2을 붙혀 각각의 원소를 제곱
-
-
-a=[1 2 3];
-b=[7 8 9];
-a.*b;             % a의 원소를 b의 원소에 곱합
-a * b';           % a(1*3) * b(3*1)로 내적을 구함
-
-
-zeros(3,3) ;      % 원소가 0인 3*3 행렬
-eye(3);           % 대각선 성분만 1인 행렬
-ones(3,3);        % 원소가 1인 3*3 행렬 
-
-
-A = [1 2 3; 4 5 6; 7 8 9];
-sum(A);           % 각 열별로의 합
-sum(sum(A));      % 열 연산이 기본이지만 1행의 경우 행 연산을 한다.
-max(A);           % 열 중에 제일 큰 값을 출력
-min(A)            % 열 중에 제일 작은 값을 출력
-
-
-A = [1 2; 3 4];
-B = [5 6; 7 8];
-A - B;
-size(A);          % A의 크기
-length(a);        % x*y 중 큰 값을 출력
-A*B;               % 행렬의 곱
-A.*B;              % 각 원소끼리의 곱
-
-
-A = [1 26 8; 16 3 8; 2 16 25];
-A(2, 1:3);   % 1번 방법
-A(2, 1:end); % 2번 방법
-A(2,:);      % 3번 방법
-
-
-round(1.6); % 반올림
-floor(1.6); % 반내림
-ceil(1.6);  % 올림
-
-
-x =[1 2 3 4 5]; y=[5 4 3 2 1];
-x<y      % x가 y보다 작은 부분을 '1'로 나머지는 '0'으로 출력(참/거짓)
-x(x<y)   % x<y 인 x값을 출력
-whos     % 작업 공간의 변수들을 출력
-whos d   % d만 출력
+x = linspace(0,2*pi,100);
+y = sin(x);
+plot(x,y,'--rs','linewidth',...  % ...으로 아래 줄에 작성
+    2,'markeredgecolor',...
+    'k','markersize',10)
 
 
 
+f = inline('x^5+3*x-1','x')
+f(2)
 
-% 편집기 사용
-clear; % 작업 공간 초기화
-clc;   
-a=1;  % 세미콜론은 명령 창에 안 띄우도록 해줌
-b=2;
-c=a+b
 
-% 반복문(for)
-for x=0:0.5:1
-    a=2^x
-end
 
+% 함수 사용
+x = [10 20 30]
+multiMAT(x) % multiMAT() 함수를 불러와 사용
+
+
+% x를 정의하고 eval() 함수로 계산
 clear; clc;
-for k=5:-2:1
-    b=k
-end
-
-% 반복문(while)
-a=1
-while a<4
-    a=a+1
-end
+f = 'x^5+3*x-1'
+x=2
+eval(f)      
 
 
-% 조건문 (if)
-clear; clc;
-
-a=3;
-if a<1
-    b=a+1
-elseif a<3
-    c=a+2
-else
-    d=a+3
-end
+% 대소 비교
+x =[1 2 3 5 8]; y = [0 2 1 4 9];
+find(x<=y)         % 수를 출력
+length(find(x<=y)) % [2 5] => 1*2중 2를 출력
 
 
-% 조건문(switch)
-switch i
-    case 1.5
-        b = 2
-    case 2
-        b = 3
-    otherwise
-        b = 5
-end
+% 다항함수
+clear all; clc; close all;
+
+x = [-1 1 3 5]; y = [2 -4 1 3];
+p = polyfit(x,y,3)              % polyfit(x좌표,y좌표,다항식차수) : 다항식의 계수를 찾음
+xx = linspace(-1,5,100);
+yy = polyval(p,xx);             % polyval() :다항식의 함수 값을 찾음        
+plot(x,y,'ro',xx,yy,'k-')
 
 
 
-% **linspace(시작점,끝점,점의 총수)
-x = linspace(0,5,6)
-y = linspace(-1,1,5)
+% 파일 입출력 
+fp = fopen('test.m','w');        % fp변수 / test.m 이라는 FileOpen / write
 
-x=linspace(0,2*pi,100)
-y=sin(x);
+fprintf(fp,'%d %d\n',1,2);       % fp 파일에 1,2을 %d에 입력
+fprintf(fp,'%1.1f %f\n',3.5, 4.5);
+fprintf(fp,'%e %e\n',100, 1000);
+fclose(fp);
 
-plot(x,y,'ko-')
+
+
+% clf : clear figure : 지워준다.
+% close all : figure 창을 닫는다.
+% figure(100) : 100값을 갖는 figure창을 띄운다.
+% hold on : 여러개를 겹쳐서 그리고 싶을때 사용
+% hold off
+
+plot(yy,'k-') % xx의 좌표가 인덱스로 표시(100)
+
+plot(x,y,'ro')
+hold on
+plot(xx,yy,'k-')
+
+
+
+
+
+% 그래프 표현
+clear all; clc; close all;
+
+X = linspace(0,10,50);
+
+Y1 = sin(X);
+Y2 = cos(X);
+Y3 = 1 + sin(X);
+
+figure(100)
+subplot(1,3,1)    % 1행 3열의 첫번째 칸
+plot(X,Y1,'ro-')
+
+subplot(1,3,2)    % 1행 3열의 두번째 칸
+plot(X,Y2,'b*-')
+
+subplot(1,3,3)    % 1행 3열의 세번째 칸
+plot(X,Y3,'gd--')
+
+figure(200)
+plot(X,Y1,'ko--'); hold on;
+plot(X,Y2,'r*:')
+title('sin / cos graph')
+xlabel('x value')
+ylabel('y label')
+legend('sin','cos')      % 범례
+grid on                  % 격자
+%axis([5 8 0 1])         % x의 범위(5~8) / y의 범위(0~1)
+
+
+
+% 이미지 표현
+close all;
+t = linspace(0,2*pi,100);
+x = 3*cos(t);
+y = 2*sin(t);
+
+subplot(1,3,1)
+plot(x,y)
+axis image    % 원래 이미지 유지, box크기 원래 이미지 크기
+
+subplot(1,3,2)
+plot(x,y)
+axis equal    % 원래 이미지 유지, box크기 3:4:4 나타냄
+
+subplot(1,3,3)
+plot(x,y)
+axis square   % 원래 이미지 변경, box크기 1:1:1 나타냄
+
+
+
+% 3차원 그래프
+close all;
+plot3(10,10,10,'ko')
+grid on
+
+t = 0:0.01:10
+x=cos(3*t);
+y=sin(3*t);
+z=t.^2;
+plot3(x,y,z,'k-')
