@@ -1,0 +1,1 @@
+viewer = siteviewer(Buildings="map.osm");
