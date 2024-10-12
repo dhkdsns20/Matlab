@@ -1,43 +1,40 @@
-% task2
-clc; close all;
+% task2: % DTFT of x2(n) = (cos(0.5*pi*n)+j*sin(0.5*pi*n)).*(u(n)-u(n-51))
+clear all; clc; close all;
+% generate u(n) with n = 0:52
+[x21,n21] =  stepseq(0 ,0 ,52 ); 
+% generate u(n-51) with n = 0:52
+[x22,n22] =  stepseq(51 ,0 ,52 );
+% generate u(n)-u(n-51) using sigadd function
+[x23,n23] =  sigadd(x21, n21, -x22, n22 ); 
 
-% Define n be 0~50
-n = [0:50]; 
-% Define x(n) = (0.8)^n
-x = (0.8).^n;  
-% Define h(n) = (-0.9)^n
-h = (-0.9).^n;  
+%
+n2 = n23;
+% generate (cos(0.5*pi*n)+j*sin(0.5*pi*n)).*(u(n)-u(n-51))
+x2 =  (cos(0.5*pi.*n2)+j*sin(0.5*pi.*n2)).*x23;
+% generate linear spaced vector -pi to pi with 201 elements
+w2 =  linspace(-pi ,pi ,201 ); 
+% generate DTFT of x2 using dtft function
+X2 =  dtft(x2 ,n2 ,w2 );
+% evaluate magnitude of X2
+magX2 =  abs(X2); 
+% evaluate phase of X2
+phaX2 =  angle(X2 );
 
-% (a) Plot of the analytical convolution
-% Define y1(n) = h(n)*x(n)
-[y1, n1] = conv_m(x, n, h, n);  % Using convolution with 4 parameters
-% Generate subplot 1x3 and set configuration to first window
-subplot(1, 3, 1); 
-% Plot 51 samples of y1 using stem function
-Hs1 = stem(n1(1:51), y1(1:51), 'filled', 'markersize', 2);
-% Figure configuration
-title('Analytical'); xlabel('n'); ylabel('y(n)');
-
-% (b) Plot using the conv function and truncated sequences
-% Truncate x2 and h2 to 26 samples of x and h
-x2 = x(1:26);  % 1-based indexing in MATLAB
-h2 = h(1:26);  
-% Define y2(n) = h2(n)*x2(n)
-[y2, n2] = conv_m(x2, [0:25], h2, [0:25]);  
-% Generate subplot 1x3 and set configuration to second window
-subplot(1, 3, 2); 
-% Plot y2 using stem function
-Hs2 = stem(n2, y2, 'filled', 'markersize', 2);
-% Figure configuration
-title('Using conv function'); xlabel('n'); ylabel('y(n)');
+% Generate 2x1 subplot.
+% 1st window be w/pi vs magnitude of X2. 
+% x label be w/pi and y label be absolute of X
+% set title be 'Magnitude Response'
+Hf_1 = figure; 
+subplot(2,1,1); plot(w2/pi,magX2,'LineWidth',1.5);
+xlabel('\omega/\pi'); ylabel('|X|');
+title('Magnitude response');
 
 
-% (c) Plot of the convolution using the filter function
-% Using filter function to determine y3
-y3 = filter([1], [1, 0.9], x);  
-% Generate subplot 1x3 and set configuration to third window
-subplot(1, 3, 3); 
-% Plot y3 using stem function
-Hs3 = stem(n, y3, 'filled', 'markersize', 2);
-% Figure configuration
-title('Using filter function'); xlabel('n'); ylabel('y(n)');
+% 2nd window be w/pi vs angle of X2 in degrees
+% axis be x=[-1 1] and y=[-200 200]
+% x label be w/pi and y label be degrees
+% set title be 'Phase Response'
+subplot(2,1,2); plot(w2/pi,phaX2*180/pi,'LineWidth',1.5);
+axis([-1,1,-200,200]); 
+xlabel('\omega/\pi'); ylabel('Degrees');
+title('Phase Response');
