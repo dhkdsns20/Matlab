@@ -1,21 +1,18 @@
-% trial 1a: h(n) = (0.9)^|n|; H(w) = 0.19/(1.81-1.8*cos(w));
+% trial1
 clc; close all;
-% interval of [-pi pi] with 300 steps
-w = [-300:300]*pi/300; 
-% define H(w)
-H = 0.19*ones(size(w))./(1.81-1.8*cos(w));
-% define magnitude
-magH = abs(H); 
-% define phase
-phaH = angle(H)*180/pi;
+b = [1,-3,4,1]; a = [1,-4,1,-0.16];
+[R,p,k] = residuez(b,a)
+% R =
+%    0.5383          
+%    3.3559 + 5.7659i
+%    3.3559 - 5.7659i
+% p =
+%    3.7443          
+%    0.1278 + 0.1625i
+%    0.1278 - 0.1625i
+% k =
+%    -6.2500
 
-% figure plotting
-Hf_1 = figure;
-% magnitude plot
-subplot(2,1,1); plot(w/pi,magH,'LineWidth',1.5); axis([-1 1 0 20]);
-xlabel('\omega / \pi'); ylabel('|H|');
-title('Magnitude response of h(n) = (0.9)^{|n|}');
-% phase plot
-subplot(2,1,2); plot(w/pi,phaH,'LineWidth',1.5); axis([-1 1 -180 180]);
-xlabel('\omega / \pi'); ylabel('Degrees');
-title('Phase response of h(n) = (0.9)^{|n|}');
+r = abs(p(2))
+% r =
+%   0.2067
